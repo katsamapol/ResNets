@@ -8,13 +8,13 @@ ResNets PyTorch CIFAR10 Training
 ## Training
 ```
 # Start training with: 
-python resnet.py
+python main.py
 
 # You can manually assign parameters with: 
-python resnet.py --lr=0.01
+python main.py --lr=0.01
 
 # To list all configurable parameters use: 
-python resnet.py -h
+python main.py -h
 ```
 ## Parameters
 | Description | DType       | Arguments  | Default | 
