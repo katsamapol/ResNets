@@ -1,4 +1,5 @@
 # Residual Networks
+ResNets PyTorch CIFAR10 Training
 
 ## Prerequisites
 - Python 3.6+
