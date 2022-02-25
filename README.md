@@ -22,6 +22,7 @@ python resnet.py -h
 | Learning rate                               | float  | lr         | 0.1 | 
 | Data path                                   | string | path       | ./CIFAR10/  | 
 | Number of epochs                            | int    | e          | 2   | 
+| Number of data loader workers               | int    | w          | 12   | 
 | Optimizer                                   | string | o          | sgd | 
 | Number of residual layers                   | int    | n          | 4   | 
 | Number of residual blocks for each of residual layer | int    | b           | 2 2 2 2 | 
