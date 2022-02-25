@@ -20,6 +20,7 @@ python resnet.py -h
 | Description | DType       | Arguments  | Default | 
 | ----------- | ----------- | ---------- | ------- | 
 | Learning rate                               | float  | lr         | 0.1 | 
+| Data path                                   | string | path       | ./CIFAR10/  | 
 | Number of epochs                            | int    | e          | 2   | 
 | Optimizer                                   | string | o          | sgd | 
 | Number of residual layers                   | int    | n          | 4   | 
