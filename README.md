@@ -16,11 +16,11 @@ python resnet.py --lr=0.01
 python resnet.py -h
 ```
 ## Parameters
-| Arguments  | Description |
-| -----------| ----------- |
-| lr         | learning rate (as float, eg: "0.1")   |
-| e          | number of epochs (as int)             |
-| o          | optimizer (as string, eg: "sgd")      |
+| Description | DType       | Arguments  | default | 
+| ----------- | ----------- | ---------- | ------- | 
+| learning rate    | float  | lr         | 0.1 | 
+| number of epochs | int    | e          | 2   | 
+| optimizer        | string | o          | sgd | 
 
 ## Accuracy
 | Parameter Setting | Acc.        |
