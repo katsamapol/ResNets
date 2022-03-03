@@ -22,7 +22,7 @@ python main.py -h
 | Learning rate                          | float  | lr         | 0.1 | 
 | Dataset directory                      | string | path       | ./CIFAR10/  | 
 | # of epochs                            | int    | e          | 5   | 
-| # of data loader workers               | int    | w          | 12  | 
+| # of data loader workers               | int    | w          | 8   | 
 | Optimizer                              | string | o          | sgd | 
 | # of residual layers                   | int    | n          | 4   | 
 | # of residual blocks for each of residual layer | int    | b           | 2 2 2 2 | 
