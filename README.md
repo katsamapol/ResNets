@@ -29,7 +29,9 @@ python main.py -h
 | # of channels in the first residual layer       | int    | c           | 64      | 
 | Convolutional kernel sizes    		 | int    | f        	 | 3       | 
 | Skip connection kernel sizes 			 | int    | k     	  	 | 1       | 
+
 ![ResNet18 setting example](resnet18.jpg)
+
 ## Accuracy
 | Parameter Setting | Acc.        |
 | ----------------- | ----------- |
