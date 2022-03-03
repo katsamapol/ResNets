@@ -19,18 +19,17 @@ python main.py -h
 ## Parameters
 | Description | DType       | Arguments  | Default | 
 | ----------- | ----------- | ---------- | ------- | 
-| Learning rate                               | float  | lr         | 0.1 | 
-| Dataset directory                           | string | path       | ./CIFAR10/  | 
-| Number of epochs                            | int    | e          | 2   | 
-| Number of data loader workers               | int    | w          | 12   | 
-| Optimizer                                   | string | o          | sgd | 
-| Number of residual layers                   | int    | n          | 4   | 
-| Number of residual blocks for each of residual layer | int    | b           | 2 2 2 2 | 
-| Number of channels in the first residual layer       | int    | c           | 64      | 
-| Convolutional kernel sizes in each residual layer    | int    | covk        |         | 
-| Skip connection kernel sizes in each residual layer  | int    | skipk       |         | 
-| Average pool kernel sizes                            | int    | p           |         | 
-
+| Learning rate                          | float  | lr         | 0.1 | 
+| Dataset directory                      | string | path       | ./CIFAR10/  | 
+| # of epochs                            | int    | e          | 5   | 
+| # of data loader workers               | int    | w          | 12  | 
+| Optimizer                              | string | o          | sgd | 
+| # of residual layers                   | int    | n          | 4   | 
+| # of residual blocks for each of residual layer | int    | b           | 2 2 2 2 | 
+| # of channels in the first residual layer       | int    | c           | 64      | 
+| Convolutional kernel sizes    		 | int    | f        	 | 3       | 
+| Skip connection kernel sizes 			 | int    | k     	  	 | 1       | 
+![ResNet18 setting example](resnet18.jpg)
 ## Accuracy
 | Parameter Setting | Acc.        |
 | ----------------- | ----------- |
