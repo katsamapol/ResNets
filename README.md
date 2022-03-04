@@ -23,8 +23,8 @@ python main.py -h
 | ----------- | ----------- | ---------- | ------- | 
 | Optimizer                              | string | o          | sgd | 
 | Learning rate                          | float  | lr         | based on optimizer [[here]](#optimizer) | 
-| Momentum                          	 | float  | m          | 0.9 | 
-| Weight decay                           | float  | w          | 0.0005 | 
+| Momentum                          	 | float  | m          | based on optimizer [[here]](#optimizer) | 
+| Weight decay                           | float  | w          | based on optimizer [[here]](#optimizer) | 
 | Dataset directory                      | string | path       | ./CIFAR10/  | 
 | # of epochs                            | int    | e          | 5   | 
 | # of data loader workers               | int    | w          | 8   | 
@@ -42,11 +42,18 @@ python main.py -h
 | ----------------- | ----------- |
 | --e 100 --w 8 --n 3 --b 1 3 1 --f 5 --k 1 --p 0 2         |  00.00%     |
 
-## <a id="optimizer">Optimizer default setting</a> [[1]](#1)
-| Name 		  | learning rate | weight decay  | 
-| ----------- | ------------- | ---------- |
-| SGD         | 0.1 		  | 0.0005     |
+## <a id="optimizer">Optimizer setting</a>
+| Name 		  | learning rate | weight decay | Momentum  | 
+| ----------- | ------------- | ---------- | ---------- |
+| [SGD](https://pytorch.org/docs/stable/generated/torch.optim.SGD.html)         		 | 0.1 		  | 0.0005     | 0.9		|
+| [SGD /w Nesterov](https://pytorch.org/docs/stable/generated/torch.optim.SGD.html)    | 0.1 		  | 0.0005     | 0.9        |
+| [Adam](https://pytorch.org/docs/stable/generated/torch.optim.Adam.html)			     | 0.0001 	  | 0.0005     | None       |
+| [Adagrad](https://pytorch.org/docs/stable/generated/torch.optim.Adagrad.html)			 | 0.01 	  | 0.0005     | None       |
+| (Adadelta)(https://pytorch.org/docs/stable/generated/torch.optim.Adadelta.html)				 | 1.0  	  | 0.0005     | None       |
 
+Anything other parameters that did not display in the above table uses default [PyTorch](https://pytorch.org/)'s setting.
+
+Test referencomg [[1]](#1)
 ## References
 <a id="1">[1]</a> 
 Sebastian Ruder [(2017)](https://arxiv.org/pdf/1609.04747.pdf). 
