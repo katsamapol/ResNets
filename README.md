@@ -18,12 +18,6 @@ python main.py -h
 
 ```
 
-## <a id="optimizer">Optimizer default setting</a> 
-| Name 		  | learning rate | weight decay  | 
-| ----------- | ------------- | ---------- |
-| SGD         | 0.1 		  | 0.0005     |
-
-## Suggest
 ## Parameters
 | Description | DType       | Arguments  | Default | 
 | ----------- | ----------- | ---------- | ------- | 
@@ -48,11 +42,13 @@ python main.py -h
 | ----------------- | ----------- |
 | --e 100 --w 8 --n 3 --b 1 3 1 --f 5 --k 1 --p 0 2         |  00.00%     |
 
+## <a id="optimizer">Optimizer default setting</a> [[1]](#1)
+| Name 		  | learning rate | weight decay  | 
+| ----------- | ------------- | ---------- |
+| SGD         | 0.1 		  | 0.0005     |
 
-"...the **go to** statement should be abolished..." [[1]](#1).
-
-## Optimizer default setting
+## References
 <a id="1">[1]</a> 
-Dijkstra, E. W. (1968). 
-Go to statement considered harmful. 
-Communications of the ACM, 11(3), 147-148.
+Sebastian Ruder [(2017)](https://arxiv.org/pdf/1609.04747.pdf). 
+An overview of gradient descent optimization algorithms. 
+Chapter 4 gradient descent optimization algorithms, (p.) 4-9.
