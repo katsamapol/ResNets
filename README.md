@@ -43,7 +43,7 @@ python main.py -h
 | --e 100 --w 8 --n 3 --b 1 3 1 --f 5 --k 1 --p 0 2         |  00.00%     |
 
 ## <a id="optimizer">Optimizer setting</a>
-| Name 		  | learning rate | weight decay | Momentum  | 
+| Name 		  | Learning rate | Weight decay | Momentum  | 
 | ----------- | ------------- | ---------- | ---------- |
 | [SGD](https://pytorch.org/docs/stable/generated/torch.optim.SGD.html)         		 | 0.1 		  | 0.0005     | 0.9		|
 | [SGD /w Nesterov](https://pytorch.org/docs/stable/generated/torch.optim.SGD.html)    | 0.1 		  | 0.0005     | 0.9        |
