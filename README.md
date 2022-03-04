@@ -22,9 +22,9 @@ python main.py -h
 | Description | DType       | Arguments  | Default | 
 | ----------- | ----------- | ---------- | ------- | 
 | Optimizer                              | string | o          | sgd | 
-| Learning rate                          | float  | lr         | based on optimizer [[here]](#optimizer) | 
-| Momentum                          	 | float  | m          | based on optimizer [[here]](#optimizer) | 
-| Weight decay                           | float  | w          | based on optimizer [[here]](#optimizer) | 
+| Learning rate                          | float  | lr         | [based on optimizer](#optimizer) | 
+| Momentum                          	 | float  | m          | [based on optimizer](#optimizer) | 
+| Weight decay                           | float  | w          | [based on optimizer](#optimizer) | 
 | Dataset directory                      | string | path       | ./CIFAR10/  | 
 | # of epochs                            | int    | e          | 5   | 
 | # of data loader workers               | int    | w          | 8   | 
