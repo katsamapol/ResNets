@@ -49,7 +49,7 @@ python main.py -h
 | [SGD /w Nesterov](https://pytorch.org/docs/stable/generated/torch.optim.SGD.html)    | 0.1 		  | 0.0005     | 0.9        |
 | [Adam](https://pytorch.org/docs/stable/generated/torch.optim.Adam.html)			     | 0.0001 	  | 0.0005     | None       |
 | [Adagrad](https://pytorch.org/docs/stable/generated/torch.optim.Adagrad.html)			 | 0.01 	  | 0.0005     | None       |
-| (Adadelta)(https://pytorch.org/docs/stable/generated/torch.optim.Adadelta.html)				 | 1.0  	  | 0.0005     | None       |
+| [Adadelta](https://pytorch.org/docs/stable/generated/torch.optim.Adadelta.html)				 | 1.0  	  | 0.0005     | None       |
 
 Anything other parameters that did not display in the above table uses default [PyTorch](https://pytorch.org/)'s setting.
 
