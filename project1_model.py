@@ -29,9 +29,12 @@ def project1_model():
     parser.add_argument('--n', default=4, type=int, help='# of residual layers')
     parser.add_argument('--b', default=[2,1,1,1], type=int, nargs='+', help='number of residual blocks in each of the residual layer (e.g. --b 2 2 2 2)')
     parser.add_argument('--c', default=64, type=int, help='# of channels in the first residual layer')
-    parser.add_argument('--f', default=[3, 3], type=int, nargs='+', help='Convolutional kernel sizes (e.g. --f 7 3)')
+    parser.add_argument('--f0', default=3, type=int, help='Input layer convolutional kernel size')
+    parser.add_argument('--f1', default=3, type=int, help='Residual layer convolutional kernel size')
     parser.add_argument('--k', default=1, type=int, help='Skip connection kernel sizes')
-    parser.add_argument('--p', default=[1, 1], type=int, nargs='+', help='# of padding at convolutional input layer and convolutional blocks inside residual layer (e.g. --p 1 1)')
+    parser.add_argument('--p0', default=1, type=int, help='Input layer convolutional padding size')
+    parser.add_argument('--p1', default=1, type=int, help='Residual layer convolutional padding size')
+    
     parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
     args = parser.parse_args()
 
@@ -43,9 +46,11 @@ def project1_model():
     num_layers = args.n
     num_blocks = args.b
     num_channels = args.c
-    conv_kernel = args.f
+    conv_kernel0 = args.f0
+    conv_kernel1 = args.f1
     skip_kernel = args.k
-    padding = args.p
+    padding0 = args.p0
+    padding1 = args.p1
 
     if(len(num_blocks)!=num_layers):
         print(f"{num_blocks}, block arguments of {len(num_blocks)} and layers of {num_layers} mismatched.")
@@ -63,7 +68,7 @@ def project1_model():
     print(f"==> Running on : {device}")
 
     #print('==> Building model..')
-    model = ResNet(BasicBlock, num_blocks, num_layers, num_channels, conv_kernel, skip_kernel, padding).to(device)
+    model = ResNet(BasicBlock, num_blocks, num_layers, num_channels, conv_kernel0, conv_kernel1, skip_kernel, padding0, padding1).to(device)
 
     epoch_at_best_acc = 0
     loss_at_best_acc =0
@@ -81,7 +86,9 @@ def project1_model():
 
     print(f'==> Number of CPU: {os.cpu_count()}')
     print(f'==> Number of workers: {num_workers}')
-    print(f'==> #Epochs: {num_epochs+start_epoch}, #Layers: {num_layers}, #Blocks: {num_blocks}, In channel: {num_channels}, Conv kernel: [{conv_kernel[0]}x{conv_kernel[0]} {conv_kernel[1]}x{conv_kernel[1]}], Skip kernel: {skip_kernel}x{skip_kernel}, #Padding: {padding}')
+    print(f'==> #Epochs: {num_epochs+start_epoch}, #Layers: {num_layers}, #Blocks: {num_blocks}, In channel: {num_channels}'+
+        f', Input layer conv kernel: {conv_kernel0}x{conv_kernel0}, Residual layer conv kernel {conv_kernel1}x{conv_kernel1}'+
+        f', Skip kernel: {skip_kernel}x{skip_kernel}, Input layer conv padding: {padding0}, Residual layer conv padding: {padding1}')
 
     if device == 'cuda':
         model = torch.nn.DataParallel(model)
@@ -169,7 +176,7 @@ def project1_model():
 
     #summary(model, (3,32,32))
     #quit()
-    
+
     # Image preprocessing modules
     transform_train = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
@@ -348,10 +355,10 @@ class BasicBlock(nn.Module):
     def __init__(self, in_planes, planes, conv_kernel, skip_kernel, padding, stride=1):
         super(BasicBlock, self).__init__()
         self.conv1 = nn.Conv2d(
-            in_planes, planes, kernel_size=conv_kernel[1], stride=stride, padding=padding[1], bias=False)
+            in_planes, planes, kernel_size=conv_kernel, stride=stride, padding=padding, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
         self.conv2 = nn.Conv2d(
-            planes, planes, kernel_size=conv_kernel[1], stride=1, padding=padding[1], bias=False)
+            planes, planes, kernel_size=conv_kernel, stride=1, padding=padding, bias=False)
         self.bn2 = nn.BatchNorm2d(planes)
 
         self.shortcut = nn.Sequential()
@@ -375,27 +382,27 @@ class BasicBlock(nn.Module):
 
 
 class ResNet(nn.Module):
-    def __init__(self, block_type, num_blocks, num_layers, num_channels, conv_kernel, skip_kernel, padding, num_classes=10):
+    def __init__(self, block_type, num_blocks, num_layers, num_channels, conv_kernel0, conv_kernel1, skip_kernel, padding0, padding1, num_classes=10):
         super(ResNet, self).__init__()
         self.in_planes = num_channels
         self.num_layers = num_layers
-        self.conv1 = nn.Conv2d(3, num_channels, kernel_size=conv_kernel[0],
-                               stride=1, padding=padding[0], bias=False)
+        self.conv1 = nn.Conv2d(3, num_channels, kernel_size=conv_kernel0,
+                               stride=1, padding=padding0, bias=False)
         self.bn1 = nn.BatchNorm2d(num_channels)
         if(1<=self.num_layers):
-            self.layer1 = self._make_layer(block_type, num_channels, num_blocks[0], conv_kernel, skip_kernel, padding, stride=1)
+            self.layer1 = self._make_layer(block_type, num_channels, num_blocks[0], conv_kernel1, skip_kernel, padding1, stride=1)
         if(2<=self.num_layers):
             num_channels*=2
-            self.layer2 = self._make_layer(block_type, num_channels, num_blocks[1], conv_kernel, skip_kernel, padding, stride=2)
+            self.layer2 = self._make_layer(block_type, num_channels, num_blocks[1], conv_kernel1, skip_kernel, padding1, stride=2)
         if(3<=self.num_layers):
             num_channels*=2
-            self.layer3 = self._make_layer(block_type, num_channels, num_blocks[2], conv_kernel, skip_kernel, padding, stride=2)
+            self.layer3 = self._make_layer(block_type, num_channels, num_blocks[2], conv_kernel1, skip_kernel, padding1, stride=2)
         if(4<=self.num_layers):
             num_channels*=2
-            self.layer4 = self._make_layer(block_type, num_channels, num_blocks[3], conv_kernel, skip_kernel, padding, stride=2)
+            self.layer4 = self._make_layer(block_type, num_channels, num_blocks[3], conv_kernel1, skip_kernel, padding1, stride=2)
         if(5<=self.num_layers):
             num_channels*=2
-            self.layer5 = self._make_layer(block_type, num_channels, num_blocks[4], conv_kernel, skip_kernel, padding, stride=2)
+            self.layer5 = self._make_layer(block_type, num_channels, num_blocks[4], conv_kernel1, skip_kernel, padding1, stride=2)
         self.linear = nn.Linear(num_channels, num_classes)
 
     def _make_layer(self, block_type, planes, num_blocks, conv_kernel, skip_kernel, padding, stride):
