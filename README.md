@@ -26,14 +26,16 @@ python main.py -h
 | Momentum                          	 | float  | m          | [based on optimizer](#optimizer) | 
 | Weight decay                           | float  | w          | [based on optimizer](#optimizer) | 
 | Dataset directory                      | string | path       | ./CIFAR10/  | 
-| # of epochs                            | int    | e          | 5   | 
-| # of data loader workers               | int    | w          | 2   | 
-| # of residual layers                   | int    | n          | 4   | 
-| # of residual blocks in each of the residual layers | int    | b           | 2 1 1 1 | 
-| # of channels in the first residual layer       | int    | c           | 64      | 
-| Convolutional kernel sizes    		 | int    | f        	 | 3       | 
-| Skip connection kernel sizes 			 | int    | k     	  	 | 1       | 
-| # of padding at input conv layer and conv inside residual layer| int    | p     	  	 | 1  1    | 
+| Number of epochs                            | int    | e          | 5   | 
+| Number of data loader workers               | int    | w          | 2   | 
+| Number of residual layers                   | int    | n          | 4   | 
+| Number of residual blocks in each of the residual layers | int    | b           | 2 1 1 1 | 
+| Number of channels in the first residual layer     | int    | c           | 64      | 
+| Input layer convolutional kernel size   		 	 | int    | f0        	 | 3       | 
+| Residual layer convolutional kernel size   		 | int    | f1        	 | 3       | 
+| Skip connection kernel sizes 			 	| int    | k     	  	 | 1       | 
+| Input layer convolutional padding size 	| int    | p0     	  	 | 1       | 
+| Residual layer convolutional padding size | int    | p1     	  	 | 1       | 
 
 ![ResNet18 setting example](resnet18.jpg)
 
