@@ -27,15 +27,15 @@ def project1_model():
     parser.add_argument('--e', default=5, type=int, help='# of epochs')
     parser.add_argument('--wk', default=2, type=int, help='# of data loader workers')
     parser.add_argument('--n', default=4, type=int, help='# of residual layers')
-    parser.add_argument('--b', default=[2,1,1,1], type=int, nargs='+', help='number of residual blocks in each of the residual layer (e.g. --b 2 2 2 2)')
+    parser.add_argument('--b', default=[2,1,1,1], type=int, nargs='+', help='# of residual blocks in each of the residual layer (e.g. --b 2 2 2 2)')
     parser.add_argument('--c', default=64, type=int, help='# of channels in the first residual layer')
-    parser.add_argument('--f0', default=3, type=int, help='Input layer convolutional kernel size')
-    parser.add_argument('--f1', default=3, type=int, help='Residual layer convolutional kernel size')
-    parser.add_argument('--k', default=1, type=int, help='Skip connection kernel sizes')
-    parser.add_argument('--p0', default=1, type=int, help='Input layer convolutional padding size')
-    parser.add_argument('--p1', default=1, type=int, help='Residual layer convolutional padding size')
-    
-    parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
+    parser.add_argument('--f0', default=3, type=int, help='input layer convolutional kernel size')
+    parser.add_argument('--f1', default=3, type=int, help='residual layer convolutional kernel size')
+    parser.add_argument('--k', default=1, type=int, help='skip connection kernel sizes')
+    parser.add_argument('--p0', default=1, type=int, help='input layer convolutional padding size')
+    parser.add_argument('--p1', default=1, type=int, help='residual layer convolutional padding size')
+    parser.add_argument('--noaugment', action='store_true', help='do not use augmentation')
+    parser.add_argument('--resume', action='store_true', help='resume from checkpoint')
     args = parser.parse_args()
 
     # Hyper-parameters
@@ -171,24 +171,37 @@ def project1_model():
         else:
             other_params += num.numel()
 
-    print(f"Trainable Parameters: {trainable_params}")
-    print(f"Other Parameters: {other_params}")
+    print(f"==>Trainable Parameters: {trainable_params}")
+    print(f"==>Other Parameters: {other_params}")
 
     #summary(model, (3,32,32))
     #quit()
 
     # Image preprocessing modules
-    transform_train = transforms.Compose([
-        transforms.RandomCrop(32, padding=4),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),])
+    if args.noaugment:
+        transform_train = transforms.Compose([
+            transforms.ToTensor(),
+        ])
 
-    transform_test = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-    ])
+        transform_test = transforms.Compose([
+            transforms.ToTensor(),
+            
+        ])
+        print("==>Augmentation: None")
+    else:
+        transform_train = transforms.Compose([
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+        ])
 
+        transform_test = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+        ])
+        print("==>Augmentation: RandomCrop(32, padding=4), RandomHorizontalFlip(), Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)")
+    #quit()
     # CIFAR-10 dataset
     train_dataset = torchvision.datasets.CIFAR10(root=datapath,
                                                  train=True, 
