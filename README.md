@@ -37,7 +37,7 @@ python main.py -h
 | Input layer convolutional padding size 	| int    | p0     	  	 | 1       | 
 | Residual layer convolutional padding size | int    | p1     	  	 | 1       | 
 
-![ResNet18 setting example](resnet18.jpg)
+![Setting example](setting_guide.jpg)
 
 ## Accuracy
 | Parameter Setting | Acc.        |
