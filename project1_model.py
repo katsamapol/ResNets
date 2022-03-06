@@ -42,7 +42,7 @@ def project1_model():
     datapath = args.path
     num_epochs = args.e
     num_workers = args.wk
-    optimizer = args.o
+    optimizer_name = args.o
     num_layers = args.n
     num_blocks = args.b
     num_channels = args.c
@@ -76,7 +76,7 @@ def project1_model():
         # Load checkpoint.
         print('==> Resuming from checkpoint..')
         assert os.path.isdir('checkpoint'), 'Error: no checkpoint directory found!'
-        checkpoint = torch.load('./checkpoint/'+optimizer+'.pt')
+        checkpoint = torch.load(f'./checkpoint/{optimizer_name}.pt')
         model.load_state_dict(checkpoint['model'])
         best_acc = checkpoint['acc']
         start_epoch = checkpoint['epoch']
@@ -101,7 +101,7 @@ def project1_model():
         weight_decay = args.wd
     else:
         weight_decay = 0.0005
-    if(optimizer=="nesterov"):
+    if(optimizer_name=="nesterov"):
         #SGD with nesterov
         #SGD(params, lr=<required parameter>, momentum=0, dampening=0, weight_decay=0, nesterov=True)
         if args.lr:
@@ -115,7 +115,7 @@ def project1_model():
         optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay, nesterov=True)
         print('==> Optimizer is SGD with Nesterov')
         print(f'==> Momentum: {momentum}')
-    elif(optimizer=="adam"):
+    elif(optimizer_name=="adam"):
         #Adam
         #Adam(params, lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)
         if args.lr:
@@ -124,7 +124,7 @@ def project1_model():
             learning_rate = 0.001
         optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
         print('==> Optimizer is Adam')
-    elif(optimizer=="adagrad"):
+    elif(optimizer_name=="adagrad"):
         #Adagrad
         #Adagrad(params, lr=0.01, lr_decay=0, weight_decay=0, initial_accumulator_value=0, eps=1e-10)
         if args.lr:
@@ -133,7 +133,7 @@ def project1_model():
             learning_rate = 0.01
         optimizer = optim.Adagrad(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
         print('==> Optimizer is Adagrad')
-    elif(optimizer=="adadelta"):
+    elif(optimizer_name=="adadelta"):
         #Adadelta
         #Adadelta(params, lr=1.0, rho=0.9, eps=1e-06, weight_decay=0)
         if args.lr:
@@ -142,7 +142,7 @@ def project1_model():
             learning_rate = 1.0
         optimizer = optim.Adadelta(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
         print('==> Optimizer is Adadelta')
-    elif(optimizer=="sgd"):
+    elif(optimizer_name=="sgd"):
         #SGD
         #SGD(params, lr=<required parameter>, momentum=0, dampening=0, weight_decay=0, nesterov=False)
         if args.lr:
@@ -163,16 +163,16 @@ def project1_model():
     print(f'==> Weight decay: {weight_decay}')
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=200)
 
-    # other_params = 0
-    # trainable_params = 0
-    # for num in model.parameters():
-    #     if num.requires_grad:
-    #         trainable_params += num.numel()
-    #     else:
-    #         other_params += num.numel()
+    other_params = 0
+    trainable_params = 0
+    for num in model.parameters():
+        if num.requires_grad:
+            trainable_params += num.numel()
+        else:
+            other_params += num.numel()
 
-    # print(f"Trainable Parameters: {trainable_params}")
-    # print(f"Other Parameters: {other_params}")
+    print(f"Trainable Parameters: {trainable_params}")
+    print(f"Other Parameters: {other_params}")
 
     #summary(model, (3,32,32))
     #quit()
@@ -324,14 +324,14 @@ def project1_model():
             }
             if not os.path.isdir('checkpoint'):
                 os.mkdir('checkpoint')
-            torch.save(state, './checkpoint/'+optimizer+'.pt')
+            torch.save(state, f'./checkpoint/{optimizer_name}.pt')
             best_acc = acc
             epoch_at_best_acc = epoch
             loss_at_best_acc = avg_test_loss
         scheduler.step()
 
     # print execution time summary output
-    print(f'Best Accuracy: *{best_acc:.3f}%*, loss: *{loss_at_best_acc}*, at epoch: *{epoch_at_best_acc}*.')
+    print(f'Best test accuracy: *{best_acc:.3f}%*, loss: *{loss_at_best_acc}*, at epoch: *{epoch_at_best_acc+1}*.')
     print(f'==> Execution time summary of {num_epochs} epoch(s).')    
     print(f"Train data loading time: sum. *{total_train_data_loading_time_secs}* secs | avg. *{total_train_data_loading_time_secs/num_epochs}* secs per epoch.")
     print(f"Train training time: sum. *{total_train_training_time_secs}* secs | avg. *{total_train_training_time_secs/num_epochs}* secs per epoch.")
@@ -348,7 +348,14 @@ def project1_model():
     total_running_time_secs = total_data_loading_time_secs+total_training_time_secs
     print(f"Total running time: sum. *{total_running_time_secs}* secs | avg. *{total_running_time_secs/num_epochs}* secs per epoch.")
 
-
+    if device.type == 'cuda':
+        print(f'==> Number of GPU device: {torch.cuda.device_count()}')
+        for i in range(torch.cuda.device_count()):
+            torch.cuda.get_device_name(i)
+            print(f'==> Device {i} Memory Usage')
+            print('==> Allocated:', round(torch.cuda.memory_allocated(0)/1024**3,1), 'GB')
+            print('==> Cached:   ', round(torch.cuda.memory_reserved(0)/1024**3,1), 'GB')
+            print('==> Maximum:', round(torch.cuda.max_memory_reserved(0)/1024**3,1), 'GB')
 
 class BasicBlock(nn.Module):
 
@@ -414,23 +421,31 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
+        # print(f"before input layer {x.size()}")
         out = self.conv1(x)
+        # print(f"after input layer {out.size()}")
         out = self.bn1(out)
         out = F.relu(out)
         if(1<=self.num_layers):
             out = self.layer1(out)
+            # print(f"after residual layer1 {out.size()}")
         if(2<=self.num_layers):
             out = self.layer2(out)
+            # print(f"after residual layer2 {out.size()}")
         if(3<=self.num_layers):
             out = self.layer3(out)
+            # print(f"after residual layer3 {out.size()}")
         if(4<=self.num_layers):
             out = self.layer4(out)
+            # print(f"after residual layer4 {out.size()}")
         if(5<=self.num_layers):
             out = self.layer5(out)
+            # print(f"after residual layer5 {out.size()}")
         out = F.avg_pool2d(out, out.size(2))
         out = out.view(out.size(0), -1)
-        
+        # print(f"after avg pool {out.size()}")
         out = self.linear(out)
+        # quit()
         return out
 
 if __name__ == "__main__":
