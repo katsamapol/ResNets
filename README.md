@@ -27,9 +27,9 @@ python main.py -h
 | Weight decay                           | float  | w          | [based on optimizer](#optimizer) | 
 | Dataset directory                      | string | path       | ./CIFAR10/  | 
 | # of epochs                            | int    | e          | 5   | 
-| # of data loader workers               | int    | w          | 8   | 
+| # of data loader workers               | int    | w          | 2   | 
 | # of residual layers                   | int    | n          | 4   | 
-| # of residual blocks in each of the residual layers | int    | b           | 2 2 2 2 | 
+| # of residual blocks in each of the residual layers | int    | b           | 2 1 1 1 | 
 | # of channels in the first residual layer       | int    | c           | 64      | 
 | Convolutional kernel sizes    		 | int    | f        	 | 3       | 
 | Skip connection kernel sizes 			 | int    | k     	  	 | 1       | 
