@@ -116,7 +116,6 @@ def project1_model():
         print('==> Optimizer is SGD with Nesterov')
         print(f'==> Momentum: {momentum}')
     elif(optimizer_name=="adam"):
-        #Adam
         #Adam(params, lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)
         if args.lr:
             learning_rate = args.lr
@@ -125,7 +124,6 @@ def project1_model():
         optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
         print('==> Optimizer is Adam')
     elif(optimizer_name=="adagrad"):
-        #Adagrad
         #Adagrad(params, lr=0.01, lr_decay=0, weight_decay=0, initial_accumulator_value=0, eps=1e-10)
         if args.lr:
             learning_rate = args.lr
@@ -134,7 +132,6 @@ def project1_model():
         optimizer = optim.Adagrad(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
         print('==> Optimizer is Adagrad')
     elif(optimizer_name=="adadelta"):
-        #Adadelta
         #Adadelta(params, lr=1.0, rho=0.9, eps=1e-06, weight_decay=0)
         if args.lr:
             learning_rate = args.lr
@@ -143,7 +140,6 @@ def project1_model():
         optimizer = optim.Adadelta(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
         print('==> Optimizer is Adadelta')
     elif(optimizer_name=="sgd"):
-        #SGD
         #SGD(params, lr=<required parameter>, momentum=0, dampening=0, weight_decay=0, nesterov=False)
         if args.lr:
             learning_rate = args.lr
@@ -155,6 +151,19 @@ def project1_model():
             momentum = 0.9
         optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
         print('==> Optimizer is SGD')
+        print(f'==> Momentum: {momentum}')
+    elif(optimizer_name=="rmsprop"):
+        #RMSprop(params, lr=0.01, alpha=0.99, eps=1e-08, weight_decay=0, momentum=0, centered=False)
+        if args.lr:
+            learning_rate = args.lr
+        else:
+            learning_rate = 0.01
+        if args.m:
+            momentum = args.m
+        else:
+            momentum = 0.9
+        optimizer = optim.RMSprop(model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
+        print('==> Optimizer is RMSprop')
         print(f'==> Momentum: {momentum}')
     else:
         print(f"Invalid optimizer choice: sgd, nesterov, adam, adagrad, and adadelta")
@@ -365,7 +374,7 @@ def project1_model():
         print(f'==> Number of GPU device: {torch.cuda.device_count()}')
         for i in range(torch.cuda.device_count()):
             torch.cuda.get_device_name(i)
-            print(f'==> Device {i} Memory Usage')
+            print(f'==> Device #{i} Memory Usage')
             print('==> Allocated:', round(torch.cuda.memory_allocated(0)/1024**3,1), 'GB')
             print('==> Cached:   ', round(torch.cuda.memory_reserved(0)/1024**3,1), 'GB')
             print('==> Maximum:', round(torch.cuda.max_memory_reserved(0)/1024**3,1), 'GB')
