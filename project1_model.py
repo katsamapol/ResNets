@@ -175,6 +175,9 @@ def project1_model():
     
     if(t_max!=0):
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs*t_max)
+        print(f'==> Maximum number of epochs for adaptive Cosine Annealing learning rate : {num_epochs*t_max}')
+    else:
+        print(f'==> Does not use adaptive Cosine Annealing learning rate')
 
     other_params = 0
     trainable_params = 0
