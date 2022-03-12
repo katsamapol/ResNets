@@ -173,7 +173,8 @@ def project1_model():
     print(f'==> Learning rate: {learning_rate}')
     print(f'==> Weight decay: {weight_decay}')
     
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs*t_max)
+    if(t_max!=0):
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs*t_max)
 
     other_params = 0
     trainable_params = 0
@@ -353,7 +354,9 @@ def project1_model():
             best_acc = acc
             epoch_at_best_acc = epoch
             loss_at_best_acc = avg_test_loss
-        scheduler.step()
+            
+        if(t_max!=0):
+            scheduler.step()
 
     # print execution time summary output
     print(f'Best test accuracy: *{best_acc:.3f}%*, loss: *{loss_at_best_acc}*, at epoch: *{epoch_at_best_acc+1}*.')
