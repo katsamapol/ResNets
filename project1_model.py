@@ -34,7 +34,7 @@ def project1_model():
     parser.add_argument('--k', default=1, type=int, help='skip connection kernel sizes')
     parser.add_argument('--p0', default=1, type=int, help='input layer convolutional padding size')
     parser.add_argument('--p1', default=1, type=int, help='residual layer convolutional padding size')
-    parser.add_argument('--tm', default=0.2, type=int, help='maximum pecentages of epoch that Cosine Annealing could occur (e.g. --tm 0.2')
+    parser.add_argument('--tm', default=0.2, type=float, help='maximum pecentages of epoch that Cosine Annealing could occur (e.g. --tm 0.2')
     parser.add_argument('--noaugment', action='store_true', help='do not use augmentation')
     parser.add_argument('--resume', action='store_true', help='resume from checkpoint')
     args = parser.parse_args()
@@ -354,7 +354,7 @@ def project1_model():
             best_acc = acc
             epoch_at_best_acc = epoch
             loss_at_best_acc = avg_test_loss
-            
+
         if(t_max!=0):
             scheduler.step()
 
