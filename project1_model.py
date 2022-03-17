@@ -36,6 +36,7 @@ def project1_model():
     parser.add_argument('--p1', default=1, type=int, help='residual layer convolutional padding size')
     parser.add_argument('--tm', default=0.2, type=float, help='maximum pecentages of epoch that Cosine Annealing could occur (e.g. --tm 0.2')
     parser.add_argument('--noaugment', action='store_true', help='do not use augmentation')
+    parser.add_argument('--nonormalize', action='store_true', help='do not use normalization')
     parser.add_argument('--resume', action='store_true', help='resume from checkpoint')
     args = parser.parse_args()
 
@@ -194,16 +195,42 @@ def project1_model():
     #quit()
 
     # Image preprocessing modules
-    if args.noaugment:
+    if args.noaugment and args.nonormalize:
         transform_train = transforms.Compose([
             transforms.ToTensor(),
         ])
 
         transform_test = transforms.Compose([
-            transforms.ToTensor(),
-            
+            transforms.ToTensor(), 
         ])
         print("==>Augmentation: None")
+        print("==>Normalization: None")
+        print("==>Augmentation: RandomCrop(32, padding=4), RandomHorizontalFlip()")
+        print("==>Normalize: ((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)")
+    elif args.noaugment:
+        transform_train = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+        ])
+
+        transform_test = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+        ])
+        print("==>Augmentation: None")
+        print("==>Normalize: ((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)")
+    elif args.nonormalize:
+        transform_train = transforms.Compose([
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+        ])
+
+        transform_test = transforms.Compose([
+            transforms.ToTensor(),
+        ])
+        print("==>Augmentation: RandomCrop(32, padding=4), RandomHorizontalFlip()")
+        print("==>Normalization: None")
     else:
         transform_train = transforms.Compose([
             transforms.RandomCrop(32, padding=4),
