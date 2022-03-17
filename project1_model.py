@@ -22,7 +22,7 @@ def project1_model():
     parser.add_argument('--o', default="sgd", type=str, help='optimizer (as string, eg: "sgd")')
     parser.add_argument('--lr', type=float, help='learning rate')
     parser.add_argument('--m', type=float, help='momentum')
-    parser.add_argument('--wd', type=float, help='weight decay')
+    parser.add_argument('--wd', default=0.0005, type=float, help='weight decay')
     parser.add_argument('--path', default="./CIFAR10/", type=str, help='dataset directory')
     parser.add_argument('--e', default=5, type=int, help='# of epochs')
     parser.add_argument('--wk', default=2, type=int, help='# of data loader workers')
@@ -54,6 +54,7 @@ def project1_model():
     skip_kernel = args.k
     padding0 = args.p0
     padding1 = args.p1
+    weight_decay = args.wd
 
     if(len(num_blocks)!=num_layers):
         print(f"{num_blocks}, block arguments of {len(num_blocks)} and layers of {num_layers} mismatched.")
@@ -100,10 +101,6 @@ def project1_model():
     # Optimizer selector
     criterion = nn.CrossEntropyLoss()
 
-    if args.wd:
-        weight_decay = args.wd
-    else:
-        weight_decay = 0.0005
     if(optimizer_name=="nesterov"):
         #SGD with nesterov
         #SGD(params, lr=<required parameter>, momentum=0, dampening=0, weight_decay=0, nesterov=True)
