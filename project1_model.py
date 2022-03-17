@@ -34,7 +34,7 @@ def project1_model():
     parser.add_argument('--k', default=1, type=int, help='skip connection kernel sizes')
     parser.add_argument('--p0', default=1, type=int, help='input layer convolutional padding size')
     parser.add_argument('--p1', default=1, type=int, help='residual layer convolutional padding size')
-    parser.add_argument('--tm', default=0.2, type=float, help='maximum pecentages of epoch that Cosine Annealing could occur (e.g. --tm 0.2')
+    parser.add_argument('--tm', default=100, type=float, help='maximum number of epoch that Cosine Annealing could occur (e.g. --tm 100')
     parser.add_argument('--noaugment', action='store_true', help='do not use augmentation')
     parser.add_argument('--nonormalize', action='store_true', help='do not use normalization')
     parser.add_argument('--resume', action='store_true', help='resume from checkpoint')
@@ -175,8 +175,8 @@ def project1_model():
     print(f'==> Weight decay: {weight_decay}')
     
     if(t_max!=0):
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs*t_max)
-        print(f'==> Maximum number of epochs for adaptive Cosine Annealing learning rate : {num_epochs*t_max}')
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=t_max)
+        print(f'==> Maximum number of epochs for adaptive Cosine Annealing learning rate : {t_max}')
     else:
         print(f'==> Does not use adaptive Cosine Annealing learning rate')
 
@@ -205,8 +205,6 @@ def project1_model():
         ])
         print("==>Augmentation: None")
         print("==>Normalization: None")
-        print("==>Augmentation: RandomCrop(32, padding=4), RandomHorizontalFlip()")
-        print("==>Normalize: ((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)")
     elif args.noaugment:
         transform_train = transforms.Compose([
             transforms.ToTensor(),
