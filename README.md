@@ -1,24 +1,23 @@
-# Residual Networks
-ResNets PyTorch CIFAR10 Training
+# Scalable ResNet on CIFAR10 using PyTorch
 
-## Prerequisites
+## Requirements
 - Python 3.6+
 - PyTorch 1.0+
 
-## Training
+## How to use
 ```
 # Start training with: 
-python main.py
+python project1_model.py
 
 # You can manually assign parameters with: 
-python main.py --lr 0.01
+python project1_model.py --lr 0.01
 
 # To list all configurable parameters use: 
-python main.py -h
+python project1_model.py -h
 
 ```
 
-## Parameters
+## Adjustable Parameters
 | Description | DType       | Arguments  | Default | 
 | ----------- | ----------- | ---------- | ------- | 
 | Optimizer                              | string | o          | sgd | 
@@ -37,31 +36,9 @@ python main.py -h
 | Input layer convolutional padding size 	| int    | p0     	  	 | 1       | 
 | Residual layer convolutional padding size | int    | p1     	  	 | 1       | 
 
-## Setting example
-![Setting example](setting_guide.jpg)
-
-## Accuracy
-| Parameter Setting | Acc.        |
-| ----------------- | ----------- |
-| --e 100 --w 8 --n 3 --b 1 3 1 --f 5 --k 1 --p 0 2         |  00.00%     |
-
-## <a id="optimizer">Optimizer setting</a>
-| Name 		  | Learning rate | Weight decay | Momentum  | 
-| ----------- | ------------- | ---------- | ---------- |
-| [SGD](https://pytorch.org/docs/stable/generated/torch.optim.SGD.html)         		 | 0.1 		  | 0.0005     | 0.9		|
-| [SGD /w Nesterov](https://pytorch.org/docs/stable/generated/torch.optim.SGD.html)    | 0.1 		  | 0.0005     | 0.9        |
-| [Adam](https://pytorch.org/docs/stable/generated/torch.optim.Adam.html)			     | 0.001 	  | 0.0005     | None       |
-| [Adagrad](https://pytorch.org/docs/stable/generated/torch.optim.Adagrad.html)			 | 0.01 	  | 0.0005     | None       |
-| [Adadelta](https://pytorch.org/docs/stable/generated/torch.optim.Adadelta.html)				 | 1.0  	  | 0.0005     | None       |
-
-Anything other parameters that did not display in the above table uses default [PyTorch](https://pytorch.org/)'s setting.
+## Parameter Setting explanation
+![explain_resnet](explain_resnet.jpg)
 
 
-
-
-Test referencing [[1]](#1)
 ## References
-<a id="1">[1]</a> 
-Sebastian Ruder [(2017)](https://arxiv.org/pdf/1609.04747.pdf). 
-An overview of gradient descent optimization algorithms. 
-Chapter 4 gradient descent optimization algorithms, (p.) 4-9.
+Liu K., Train CIFAR10 with PyTorch [(2017)](https://github.com/kuangliu/pytorch-cifar). 
