@@ -13,52 +13,58 @@ import torchvision.transforms as transforms
 import os
 import argparse
 
+#argument parser
+parser = argparse.ArgumentParser(description='ResNet PyTorch CIFAR10 Trainer')
+parser.add_argument('--o', default="sgd", type=str, help='optimizer (as string, eg: "sgd")')
+parser.add_argument('--lr', type=float, help='learning rate')
+parser.add_argument('--m', type=float, help='momentum')
+parser.add_argument('--wd', default=0.0005, type=float, help='weight decay')
+parser.add_argument('--path', default="./CIFAR10/", type=str, help='dataset directory')
+parser.add_argument('--e', default=5, type=int, help='# of epochs')
+parser.add_argument('--wk', default=2, type=int, help='# of data loader workers')
+parser.add_argument('--n', default=4, type=int, help='# of residual layers')
+parser.add_argument('--b', default=[2,1,1,1], type=int, nargs='+', help='# of residual blocks in each of the residual layer (e.g. --b 2 2 2 2)')
+parser.add_argument('--c', default=64, type=int, help='# of channels in the first residual layer')
+parser.add_argument('--f0', default=3, type=int, help='input layer convolutional kernel size')
+parser.add_argument('--f1', default=3, type=int, help='residual layer convolutional kernel size')
+parser.add_argument('--k', default=1, type=int, help='skip connection kernel sizes')
+parser.add_argument('--p0', default=1, type=int, help='input layer convolutional padding size')
+parser.add_argument('--p1', default=1, type=int, help='residual layer convolutional padding size')
+parser.add_argument('--tm', default=100, type=float, help='maximum number of epoch that Cosine Annealing could occur (e.g. --tm 100')
+parser.add_argument('--noaugment', action='store_true', help='do not use augmentation')
+parser.add_argument('--nonormalize', action='store_true', help='do not use normalization')
+args = parser.parse_args()
+
+# Hyper-parameters
+datapath = args.path
+num_epochs = args.e
+t_max = args.tm
+num_workers = args.wk
+optimizer_name = args.o
+num_layers = args.n
+num_blocks = args.b
+num_channels = args.c
+conv_kernel0 = args.f0
+conv_kernel1 = args.f1
+skip_kernel = args.k
+padding0 = args.p0
+padding1 = args.p1
+weight_decay = args.wd
+
 def main():
-    project1_model()
+    run_model()
 
 def project1_model():
-    #argument parser
-    parser = argparse.ArgumentParser(description='ResNet PyTorch CIFAR10 Trainer')
-    parser.add_argument('--o', default="sgd", type=str, help='optimizer (as string, eg: "sgd")')
-    parser.add_argument('--lr', type=float, help='learning rate')
-    parser.add_argument('--m', type=float, help='momentum')
-    parser.add_argument('--wd', default=0.0005, type=float, help='weight decay')
-    parser.add_argument('--path', default="./CIFAR10/", type=str, help='dataset directory')
-    parser.add_argument('--e', default=5, type=int, help='# of epochs')
-    parser.add_argument('--wk', default=2, type=int, help='# of data loader workers')
-    parser.add_argument('--n', default=4, type=int, help='# of residual layers')
-    parser.add_argument('--b', default=[2,1,1,1], type=int, nargs='+', help='# of residual blocks in each of the residual layer (e.g. --b 2 2 2 2)')
-    parser.add_argument('--c', default=64, type=int, help='# of channels in the first residual layer')
-    parser.add_argument('--f0', default=3, type=int, help='input layer convolutional kernel size')
-    parser.add_argument('--f1', default=3, type=int, help='residual layer convolutional kernel size')
-    parser.add_argument('--k', default=1, type=int, help='skip connection kernel sizes')
-    parser.add_argument('--p0', default=1, type=int, help='input layer convolutional padding size')
-    parser.add_argument('--p1', default=1, type=int, help='residual layer convolutional padding size')
-    parser.add_argument('--tm', default=100, type=float, help='maximum number of epoch that Cosine Annealing could occur (e.g. --tm 100')
-    parser.add_argument('--noaugment', action='store_true', help='do not use augmentation')
-    parser.add_argument('--nonormalize', action='store_true', help='do not use normalization')
-    parser.add_argument('--resume', action='store_true', help='resume from checkpoint')
-    args = parser.parse_args()
+    m = ResNet(BasicBlock, num_blocks, num_layers, num_channels, conv_kernel0, conv_kernel1, skip_kernel, padding0, padding1)
+    return m
 
-    # Hyper-parameters
-    datapath = args.path
-    num_epochs = args.e
-    t_max = args.tm
-    num_workers = args.wk
-    optimizer_name = args.o
-    num_layers = args.n
-    num_blocks = args.b
-    num_channels = args.c
-    conv_kernel0 = args.f0
-    conv_kernel1 = args.f1
-    skip_kernel = args.k
-    padding0 = args.p0
-    padding1 = args.p1
-    weight_decay = args.wd
-
+def run_model():
     if(len(num_blocks)!=num_layers):
         print(f"{num_blocks}, block arguments of {len(num_blocks)} and layers of {num_layers} mismatched.")
         quit()
+
+    print(f'==> Number of CPU: {os.cpu_count()}')
+    print(f'==> Number of workers: {num_workers}')
 
     # for i in range(len(num_blocks)):
     #     try:
@@ -73,30 +79,6 @@ def project1_model():
 
     #print('==> Building model..')
     model = ResNet(BasicBlock, num_blocks, num_layers, num_channels, conv_kernel0, conv_kernel1, skip_kernel, padding0, padding1).to(device)
-
-    epoch_at_best_acc = 0
-    loss_at_best_acc =0
-    if args.resume:
-        # Load checkpoint.
-        print('==> Resuming from checkpoint..')
-        assert os.path.isdir('checkpoint'), 'Error: no checkpoint directory found!'
-        checkpoint = torch.load(f'./checkpoint/{optimizer_name}.pt')
-        model.load_state_dict(checkpoint['model'])
-        best_acc = checkpoint['acc']
-        start_epoch = checkpoint['epoch']
-    else:
-        start_epoch = 0
-        best_acc = 0
-
-    print(f'==> Number of CPU: {os.cpu_count()}')
-    print(f'==> Number of workers: {num_workers}')
-    print(f'==> #Epochs: {num_epochs+start_epoch}, #Layers: {num_layers}, #Blocks: {num_blocks}, In channel: {num_channels}'+
-        f', Input layer conv kernel: {conv_kernel0}x{conv_kernel0}, Residual layer conv kernel {conv_kernel1}x{conv_kernel1}'+
-        f', Skip kernel: {skip_kernel}x{skip_kernel}, Input layer conv padding: {padding0}, Residual layer conv padding: {padding1}')
-
-    if device == 'cuda':
-        model = torch.nn.DataParallel(model)
-        cudnn.benchmark = True
 
     # Optimizer selector
     criterion = nn.CrossEntropyLoss()
@@ -170,13 +152,27 @@ def project1_model():
         quit()
     print(f'==> Learning rate: {learning_rate}')
     print(f'==> Weight decay: {weight_decay}')
-    
+  
+
+    epoch_at_best_acc = 0
+    loss_at_best_acc =0
+    start_epoch = 0
+    best_acc = 0
+
+    if device == 'cuda':
+        model = torch.nn.DataParallel(model)
+        cudnn.benchmark = True
+
     if(t_max!=0):
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=t_max)
         print(f'==> Maximum number of epochs for adaptive Cosine Annealing learning rate : {t_max}')
     else:
         print(f'==> Does not use adaptive Cosine Annealing learning rate')
 
+    print(f'==> #Epochs: {num_epochs+start_epoch}, #Layers: {num_layers}, #Blocks: {num_blocks}, In channel: {num_channels}'+
+        f', Input layer conv kernel: {conv_kernel0}x{conv_kernel0}, Residual layer conv kernel {conv_kernel1}x{conv_kernel1}'+
+        f', Skip kernel: {skip_kernel}x{skip_kernel}, Input layer conv padding: {padding0}, Residual layer conv padding: {padding1}')
+    
     other_params = 0
     trainable_params = 0
     for num in model.parameters():
@@ -367,15 +363,7 @@ def project1_model():
         # Save checkpoint.
         acc = 100.*correct/total
         if acc > best_acc:
-            #print('==> Saving..')
-            state = {
-                'model': model.state_dict(),
-                'acc': acc,
-                'epoch': epoch,
-            }
-            if not os.path.isdir('checkpoint'):
-                os.mkdir('checkpoint')
-            torch.save(state, f'./checkpoint/{optimizer_name}.pt')
+            torch.save(model.state_dict(), './project1_model.pt')
             best_acc = acc
             epoch_at_best_acc = epoch
             loss_at_best_acc = avg_test_loss
@@ -501,5 +489,48 @@ class ResNet(nn.Module):
         # quit()
         return out
 
+
+def test_model():
+
+    transform_test = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    ])   
+    test_dataset = torchvision.datasets.CIFAR10(root=datapath,
+                                                train=False, 
+                                                transform=transform_test)
+
+    test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
+                                              batch_size=100, 
+                                              shuffle=False, 
+                                              num_workers=num_workers)
+
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    model = project1_model().to(device)
+    model_path = './project1_model.pt'
+    model.load_state_dict(torch.load(model_path, map_location=device), strict=False)
+
+    model.eval()
+    # Optimizer selector
+    criterion = nn.CrossEntropyLoss()
+    test_loss = 0
+    correct = 0
+    total = 0
+    epoch_test_data_loading_time_secs = 0
+    epoch_test_training_time_secs = 0
+    with torch.no_grad():
+        for batch_idx, (inputs, targets) in enumerate(test_loader):
+            pre_forward_time = perf_counter()
+            inputs, targets = inputs.to(device), targets.to(device)
+            outputs = model(inputs)
+            loss = criterion(outputs, targets)
+            test_loss += loss.item()
+            _, predicted = outputs.max(1) #get top-1 accuracy
+            total += targets.size(0)
+            correct += predicted.eq(targets).sum().item()
+
+        avg_test_loss = test_loss/(batch_idx+1)
+        print('Loss: *%.3f* | Acc: *%.3f%%* (%d/%d)' 
+            % (avg_test_loss, 100.*correct/total, correct, total))
 if __name__ == "__main__":
-    main();
+    main()
