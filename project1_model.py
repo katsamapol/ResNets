@@ -33,6 +33,7 @@ parser.add_argument('--p1', default=1, type=int, help='residual layer convolutio
 parser.add_argument('--tm', default=100, type=float, help='maximum number of epoch that Cosine Annealing could occur (e.g. --tm 100')
 parser.add_argument('--noaugment', action='store_true', help='do not use augmentation')
 parser.add_argument('--nonormalize', action='store_true', help='do not use normalization')
+parser.add_argument('--mp', default="./project1_model.pt", type=str, help='Model saving path (as string, eg: "./file.pt")')
 args = parser.parse_args()
 
 # Hyper-parameters
@@ -50,6 +51,7 @@ skip_kernel = args.k
 padding0 = args.p0
 padding1 = args.p1
 weight_decay = args.wd
+model_path = args.mp
 
 def main():
     run_model()
@@ -363,7 +365,7 @@ def run_model():
         # Save checkpoint.
         acc = 100.*correct/total
         if acc > best_acc:
-            torch.save(model.state_dict(), './project1_model.pt')
+            torch.save(model.state_dict(), model_path)
             best_acc = acc
             epoch_at_best_acc = epoch
             loss_at_best_acc = avg_test_loss
@@ -507,7 +509,6 @@ def test_model():
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     model = project1_model().to(device)
-    model_path = './project1_model.pt'
     model.load_state_dict(torch.load(model_path, map_location=device), strict=False)
 
     model.eval()
