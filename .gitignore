@@ -8,3 +8,4 @@ CIFAR10/cifar-10-batches-py/data_batch_3
 CIFAR10/cifar-10-batches-py/data_batch_2
 CIFAR10/cifar-10-batches-py/data_batch_1
 CIFAR10/cifar-10-batches-py/batches.meta
+__pycache__/
