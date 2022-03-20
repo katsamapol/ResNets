@@ -24,6 +24,8 @@ import project1_model as p
 model_path = './project1_model.pt' #full directory path to your saved model e.g., './model.pt'
 p.test_model(model_path)
 ```
+### Example
+![retest_model](images/retest_model.jpg)
 ## You can also load and view the saved model weights and structures
 ```
 # Start your python interactive shell and type these commands: 
@@ -35,6 +37,7 @@ model_path = './project1_model.pt' #full directory path to your saved model e.g.
 model.load_state_dict(torch.load(model_path, map_location=device), strict=False)
 model.eval()
 ```
+### Example
 ![load_model](images/load_model.jpg)
 ## Adjustable parameters
 | Description | DType       | Arguments  | Default | 
