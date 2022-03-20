@@ -5,9 +5,9 @@
 - PyTorch 1.0+
 - TorchVision 0.1+
 
-## How to use
+## How to train
 ```
-# Start training with: 
+# Easily start a new training, run: 
 python project1_model.py
 
 # You can manually assign parameters with: 
@@ -18,6 +18,23 @@ python project1_model.py -h
 
 ```
 
+## How to load your saved model 
+```
+# Start your python interactive shell and type these commands: 
+>>>import torch
+>>>from project1_model import project1_model
+>>>device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+>>>model = project1_model().to(device)
+>>>model_path = './your_model_name.pt' #full directory path to your saved model e.g., './model.pt'
+>>>model.load_state_dict(torch.load(model_path, map_location=device), strict=False)
+```
+## How to re-test your saved model with our build-in function
+```
+# Start your python interactive shell and type these commands: 
+>>>import project1_model as p
+>>>model_path = './your_model_name.pt' #full directory path to your saved model e.g., './model.pt'
+>>>p.test_model(model_path)
+```
 ## Adjustable parameters
 | Description | DType       | Arguments  | Default | 
 | ----------- | ----------- | ---------- | ------- | 
@@ -25,7 +42,8 @@ python project1_model.py -h
 | Learning rate                          | float  | lr         | [based on optimizer](#optimizer) | 
 | Momentum                          	 | float  | m          | [based on optimizer](#optimizer) | 
 | Weight decay                           | float  | wd         | [based on optimizer](#optimizer) | 
-| Dataset directory                      | string | path       | ./CIFAR10/  | 
+| Dataset full path                      | string | path       | ./CIFAR10/  | 
+| Saved model full path                  | string | path       | ./project1_model.py  | 
 | Number of epochs                            | int    | e          | 5   | 
 | Number of data loader workers               | int    | wk         | 2   | 
 | Number of residual layers                   | int    | n          | 4   | 
