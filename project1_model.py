@@ -14,7 +14,7 @@ import os
 import argparse
 
 #argument parser
-parser = argparse.ArgumentParser(description='ResNet PyTorch CIFAR10 Trainer')
+parser = argparse.ArgumentParser(description='Scalable ResNet on CIFAR10 using PyTorch')
 parser.add_argument('--o', default="sgd", type=str, help='optimizer (as string, eg: "sgd")')
 parser.add_argument('--lr', type=float, help='learning rate')
 parser.add_argument('--m', type=float, help='momentum')
