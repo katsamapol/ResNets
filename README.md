@@ -1,4 +1,4 @@
-# Scalable ResNet on CIFAR10 using PyTorch
+# Scalable ResNet on CIFAR-10 using PyTorch
 
 ## Requirements
 - Python 3.6+
@@ -17,24 +17,25 @@ python project1_model.py --lr 0.01
 python project1_model.py -h
 
 ```
-
-## How to load your saved model 
+## How to re-test your saved model
 ```
 # Start your python interactive shell and type these commands: 
->>>import torch
->>>from project1_model import project1_model
->>>device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
->>>model = project1_model().to(device)
->>>model_path = './your_model_name.pt' #full directory path to your saved model e.g., './model.pt'
->>>model.load_state_dict(torch.load(model_path, map_location=device), strict=False)
+import project1_model as p
+model_path = './project1_model.pt' #full directory path to your saved model e.g., './model.pt'
+p.test_model(model_path)
 ```
-## How to re-test your saved model with our build-in function
+## You can also load and view the saved model weights and structures
 ```
 # Start your python interactive shell and type these commands: 
->>>import project1_model as p
->>>model_path = './your_model_name.pt' #full directory path to your saved model e.g., './model.pt'
->>>p.test_model(model_path)
+import torch
+from project1_model import project1_model
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+model = project1_model().to(device)
+model_path = './project1_model.pt' #full directory path to your saved model e.g., './model.pt'
+model.load_state_dict(torch.load(model_path, map_location=device), strict=False)
+model.eval()
 ```
+![load_model](images/load_model.jpg)
 ## Adjustable parameters
 | Description | DType       | Arguments  | Default | 
 | ----------- | ----------- | ---------- | ------- | 
@@ -43,7 +44,7 @@ python project1_model.py -h
 | Momentum                          	 | float  | m          | [based on optimizer](#optimizer) | 
 | Weight decay                           | float  | wd         | [based on optimizer](#optimizer) | 
 | Dataset full path                      | string | path       | ./CIFAR10/  | 
-| Saved model full path                  | string | path       | ./project1_model.py  | 
+| Saved model full path                  | string | path       | ./project1_model.pt  | 
 | Number of epochs                            | int    | e          | 5   | 
 | Number of data loader workers               | int    | wk         | 2   | 
 | Number of residual layers                   | int    | n          | 4   | 
@@ -56,7 +57,7 @@ python project1_model.py -h
 | Residual layer convolutional padding size | int    | p1     	  	 | 1       | 
 
 ## Parameter setting explanation
-![explain_resnet](explain_resnet.jpg)
+![explain_resnet](images/explain_resnet.jpg)
 
 
 ## <a id="optimizer">Default optimizer's setting</a>
