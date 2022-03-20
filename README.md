@@ -45,7 +45,7 @@ model.eval()
 | Momentum                          	 | float  | m          | [based on optimizer](#optimizer) | 
 | Weight decay                           | float  | wd         | [based on optimizer](#optimizer) | 
 | Dataset full path                      | string | path       | ./CIFAR10/  | 
-| Saved model full path                  | string | path       | ./project1_model.pt  | 
+| Saved model full path                  | string | mp       | ./project1_model.pt  | 
 | Number of epochs                            | int    | e          | 5   | 
 | Number of data loader workers               | int    | wk         | 2   | 
 | Number of residual layers                   | int    | n          | 4   | 
