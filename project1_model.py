@@ -492,7 +492,7 @@ class ResNet(nn.Module):
         return out
 
 
-def test_model():
+def test_model(local_model_path=model_path):
 
     transform_test = transforms.Compose([
         transforms.ToTensor(),
@@ -509,7 +509,7 @@ def test_model():
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     model = project1_model().to(device)
-    model.load_state_dict(torch.load(model_path, map_location=device), strict=False)
+    model.load_state_dict(torch.load(local_model_path, map_location=device), strict=False)
 
     model.eval()
     # Optimizer selector
