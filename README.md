@@ -17,15 +17,7 @@ python project1_model.py --lr 0.01
 python project1_model.py -h
 
 ```
-## How to re-test your saved model
-```
-# Start your python interactive shell and type these commands: 
-import project1_model as p
-model_path = './project1_model.pt' #full directory path to your saved model e.g., './model.pt'
-p.test_model(model_path)
-```
-![retest_model](images/retest_model.jpg)
-## You can also load and view the saved model weights and structures
+## How to load and view the saved model
 ```
 # Start your python interactive shell and type these commands: 
 import torch
@@ -36,6 +28,14 @@ model_path = './project1_model.pt' #full directory path to your saved model e.g.
 model.load_state_dict(torch.load(model_path, map_location=device), strict=False)
 model.eval()
 ```
+## How to re-test your saved model with our built-in function
+```
+# Start your python interactive shell and type these commands: 
+import project1_model as p
+model_path = './project1_model.pt' #full directory path to your saved model e.g., './model.pt'
+p.test_model(model_path)
+```
+![retest_model](images/retest_model.jpg)
 ![load_model](images/load_model.jpg)
 ## Adjustable parameters
 | Description | DType       | Arguments  | Default | 
