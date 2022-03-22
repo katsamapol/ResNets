@@ -28,6 +28,7 @@ model_path = './project1_model.pt' #full directory path to your saved model e.g.
 model.load_state_dict(torch.load(model_path, map_location=device), strict=False)
 model.eval()
 ```
+![load_model](images/load_model.jpg)
 ## How to re-test your saved model with our built-in function
 ```
 # Start your python interactive shell and type these commands: 
@@ -36,7 +37,7 @@ model_path = './project1_model.pt' #full directory path to your saved model e.g.
 p.test_model(model_path)
 ```
 ![retest_model](images/retest_model.jpg)
-![load_model](images/load_model.jpg)
+
 ## Adjustable parameters
 | Description | DType       | Arguments  | Default | 
 | ----------- | ----------- | ---------- | ------- | 
