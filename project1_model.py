@@ -30,7 +30,7 @@ parser.add_argument('--f1', default=3, type=int, help='residual layer convolutio
 parser.add_argument('--k', default=1, type=int, help='skip connection kernel sizes')
 parser.add_argument('--p0', default=1, type=int, help='input layer convolutional padding size')
 parser.add_argument('--p1', default=1, type=int, help='residual layer convolutional padding size')
-parser.add_argument('--tm', default=100, type=float, help='maximum number of epoch that Cosine Annealing could occur (e.g. --tm 100')
+parser.add_argument('--tm', default=200, type=float, help='maximum number of epoch that Cosine Annealing could occur (e.g. --tm 200')
 parser.add_argument('--noaugment', action='store_true', help='do not use augmentation')
 parser.add_argument('--nonormalize', action='store_true', help='do not use normalization')
 parser.add_argument('--mp', default="./project1_model.pt", type=str, help='Model saving path (as string, eg: "./file.pt")')
