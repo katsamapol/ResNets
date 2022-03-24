@@ -246,7 +246,8 @@ def run_model():
 
     test_dataset = torchvision.datasets.CIFAR10(root=datapath,
                                                 train=False, 
-                                                transform=transform_test)
+                                                transform=transform_test,
+                                                download=True)
 
     # Data loader
     train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
@@ -500,7 +501,8 @@ def test_model(local_model_path=model_path):
     ])   
     test_dataset = torchvision.datasets.CIFAR10(root=datapath,
                                                 train=False, 
-                                                transform=transform_test)
+                                                transform=transform_test,
+                                                download=True)
 
     test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                               batch_size=100, 
